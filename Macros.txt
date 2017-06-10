@@ -1,0 +1,117 @@
+//macros.c
+//Program to practice macros
+//Malka Lazerson
+//CSCI 223 4:30pm Edwards
+
+#include <stdio.h>
+
+#define IS_UPPER(charVal) ((charVal) >= 'A' && (charVal) <= 'Z')
+
+#define IS_LOWER(charVal) ((charVal) >= 'a' && (charVal) <= 'z')
+
+#define IS_ALPHA(charVal) (IS_UPPER(charVal) || IS_LOWER(charVal))
+
+#define INRANGE(low, high, value) ((value) >= (low) && (value)<= (high))
+
+#define IS_DIGIT(charVal) ((charVal) >= '0' && (charVal) <= '9')
+
+#define IS_SPECIAL(IS_DIGIT) (IS_DIGIT != 1)
+
+#define GET_BIT(uChar, nthB) ((uChar & nthB) == 0)
+
+
+int main(void)
+{
+    auto char input;
+    auto int number;
+    unsigned char unChar;
+    auto int lowB;
+    auto int upB;
+    auto int nth;
+
+//=== ALPHA CHAR ==========================================//
+
+    printf(" Enter a char: ");
+    scanf("%c", &input);
+
+    //check case
+    if(IS_UPPER(input))
+      {
+        printf(" Input is uppercase.\n");
+
+        if(IS_ALPHA(input))
+          {
+           printf(" Input is alpha.\n");
+          }
+      }
+    else if(IS_LOWER(input))
+      {
+        printf(" Input is lowercase.\n");
+
+           if(IS_ALPHA(input))
+             {
+              printf(" Input is alpha.\n");
+             }
+      }
+    //If above fail, must not be alpha.
+    else
+      {
+       printf(" Input is not alpha.\n");
+
+       //Since not alpha, check if digit.
+       if(IS_DIGIT(input))
+         {
+          printf(" Input is digit.\n");
+         }
+       //have IS_SPECIAL call IS_DIGIT and enter
+       //below if IS_DIGIT returns 0 (not equal to 1)
+       else if(IS_SPECIAL(IS_DIGIT(input)))
+         {
+          printf(" Input is a special char.\n");
+         }
+      }
+
+//=== NUMBER/INTEGER RANGE======================================//
+
+    //get range
+    printf(" Enter lower bound/lowest number: ");
+    scanf("%d", &lowB);
+
+    printf(" Enter uuper bound/highest number: ");
+    scanf("%d", &upB);
+
+    //get a number
+      printf(" Enter a number: ");
+      scanf("%d", &number);
+
+   if(INRANGE(lowB, upB, number))
+     {
+      printf(" Integer is in range.\n");
+     }
+   else
+     {
+      printf(" Integer is not in range.\n");
+     }
+
+//===== UNSIGNED CHAR =====================================//
+
+    //check state of target bit
+
+    printf(" Please enter a number between 0 and 255: ");
+    scanf("%hhu", &unChar);
+
+    printf(" Enter an nth bit to check: ");
+    scanf("%d", &nth);
+
+    if(GET_BIT(unChar, nth))
+      {
+       puts(" Bit is not set.");
+      }
+    else
+      {
+       puts(" The bit is set.");
+      }
+
+
+return 0;
+}

@@ -1,0 +1,148 @@
+// ============================================================================
+// file: disphex.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/1/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is part of a multi module project. It contains the
+//      implementation of DispHex function, which receives an integer
+//      value from main.c and displays it in hex.
+//
+// ============================================================================
+
+#include    <stdio.h>
+#include    "disphex.h"
+// ==== DispHex  ==================================================================
+//
+// ============================================================================
+
+void DispHex(int myInt)
+{
+//display int as hex
+  printf(" The value in hexadecimal is %#02x\n", myInt);
+
+} 
+
+
+// ============================================================================
+// file: disphex.h
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/1/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is part of a multi module project. It contains the
+//      prototype of DispHex function, which receives an integer
+//      value from main.c and displays it in hex.
+//
+// ============================================================================
+
+#include    <stdio.h>
+
+void DispHex(int g_myInt);
+
+////////==========================================================================================--------------------------------------------
+
+// ============================================================================
+// file: dispoct.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/1/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is part of a multi module project. It is the
+//      implementation of the DispOct function, which receives an integer
+//      value from main.c and displays it in octal.
+//
+// ============================================================================
+
+#include    <stdio.h>
+#include    "dispoct.h"
+
+// ==== DispOct ==================================================================
+//
+// ============================================================================
+
+void DispOct(int myInt)
+{
+
+//display int as an octal
+ printf(" The value in octal is %#02o\n", myInt);
+
+}
+
+============================================================================00000000000000000000000000000000000000000000000000000000\
+
+// ============================================================================
+// file: dispoct.h
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/1/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is part of a multi module project. It contains the
+//      prototype of DispOct function, which receives an integer
+//      value from main.c and displays it in octal.
+//
+// ============================================================================
+
+void DispOct(int g_myInt);
+
+ppppppppppppppppppppppppppppppppp=================================================================================99999999999999999999999999999
+
+// ============================================================================
+// file: main.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/1/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is part of a multi module project. It gets an integer
+//      from the user and passes it as an argument to the DispOct and DispHex
+//      functions.
+//
+// ============================================================================
+
+#include    <stdio.h>
+#include    "disphex.h"
+#include    "dispoct.h"
+
+// function prototypes
+void DispOct(int myInt);
+void DispHex(int myInt);
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int     main(void)
+{
+//declare vars...
+ auto int myInt;
+
+//get int from user
+  printf(" Enter an integer: ");
+  scanf("%d", &myInt);
+
+//pass it along
+   DispOct(myInt);
+   DispHex(myInt);
+
+  return 0;
+} 

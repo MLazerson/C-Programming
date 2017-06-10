@@ -1,0 +1,94 @@
+// ============================================================================
+// file: Sample.cpp
+// ============================================================================
+// Programmer: Scott Edwards
+// Date: 02/14/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This  program should simply copy hex values from stdin to
+//      stdout. However, after reading an input character the program should
+//      write it out in its hex format. Thus, a char dump of stdin is created.
+//
+// ============================================================================
+#include <stdio.h>
+
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int main(void)
+{
+
+   auto int myHex;
+
+   //for breaking line after 20 characters or hex's
+   auto int counter = 0;
+
+   //looping
+    while((myHex != '\n') &&( myHex != EOF))
+         {
+          if(counter <= 20)
+            {
+             scanf("%x", &myHex);
+             printf("%c", myHex);
+            }
+          else
+            {
+             scanf("%x", &myHex);
+             printf("%c\n", myHex);
+            }
+         }
+
+    return 0;
+
+}
+
+
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 02/14/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This  program should simply copy characters from stdin to stdout.
+//      However, after reading an input character the program should write it
+//      out in its hexadecimal format. Thus, a hexadecimal dump of stdin is
+//      created.
+//
+// ============================================================================
+#include <stdio.h>
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int main(void)
+{
+
+   auto int myChar;
+
+   int counter = 0;
+
+   while((myChar = getchar())!= EOF)
+        {
+         if(counter <= 20)
+           {
+            printf(" %x", myChar);
+            ++counter;
+           }
+         else
+           {
+            printf(" %x\n", myChar);
+            counter = 0;
+           }
+        }
+
+   return 0;
+
+}

@@ -1,0 +1,75 @@
+// ============================================================================
+// file: catfiles.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 04/19/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program concatenates files using the command line. The first
+//      argument to the program will be the name of the output file, and any
+//      other filenames following are assumed to be existing files. They will
+//      be read, one at a time, with their contents being written to the output
+//      file. Error messages include usage message and file failure.
+//
+// ============================================================================
+#include <stdio.h>
+#include <stdlib.h>
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int  main(int argc, char *argv[])
+{
+//DECLARE VARS
+   auto FILE *inFiles;
+   auto FILE *outFile;
+   auto int charVal;
+   auto int argvIndex = 2;
+
+// CHECK FOR USAGE/IF AT LEAST 2 FILES ARE ENTERED
+  if(argc < 2)
+    {
+     puts(" usage: catfiles <output filename> [filename1 filename2 filename3...]");
+     exit(0);
+    }
+  else
+    {
+     outFile = fopen(argv[1], "w");
+
+      if(NULL == outFile)
+        {
+         puts(" Error opening file...");
+         exit(0);
+        }
+
+
+     for(; argvIndex < argc; ++argvIndex)
+        {
+
+         inFiles = fopen(argv[argvIndex], "r");
+
+          if(NULL == inFiles)
+            {
+             puts(" Error opening file...");
+             exit(0);
+            }
+
+          while(EOF != (charVal = fgetc(inFiles)))
+           {
+            fputc(charVal, outFile);
+           }
+
+          fclose(inFiles);
+
+        }
+    }
+
+//CLOSE ALL FILES
+ fclose(outFile);
+
+return 0;
+}

@@ -1,0 +1,96 @@
+// ============================================================================
+// file: symarray.c
+// ============================================================================
+// Programmer: Scott Edwards
+// Date: 03/15/2017
+// Class: CSCI 223
+// Time: TR 4:30
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program checks if an array is symmetrical using pointers instead
+//      of the subscript operator. Main fills the array and SymArray searches
+//      the array using pointers.
+//
+// ============================================================================
+
+#include    <stdio.h>
+// function prototypes
+int   SymArray(int *arr, int num_elems);
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int     main(void)
+{
+  auto int size;
+  auto int result;
+
+  printf(" Enter a number between one and ten: ");
+  scanf("%d", &size);
+
+  auto int array[size];
+  auto int index;
+
+    for(index = 0; index < size ;index++)
+       {
+        printf(" Enter the integers: ");
+        scanf("%d", &array[index]);
+       }
+
+   printf("\n");
+
+   printf(" My function will see if the array is symmetrical!\n");
+
+   result = SymArray(array, size);
+
+   if(result == 1)
+     {
+      printf(" The array is symmetric.\n");
+     }
+   else
+     {
+      printf(" The array is not symmetric.\n");
+     }
+
+ return 0;
+}
+
+// ==== SymArray ===============================================================
+//
+// This function checks if the array elements are symmetrical. It recieves the
+// base address of an array and the number of elements. It uses pointers to
+// make a decision.
+//
+// Input:
+//      limit [IN]  -- Base address of an int array and the number of elements
+//
+// Output:
+//      Returns a one if symmetrical OR a zero if not.
+//
+// ============================================================================
+int SymArray(int *arr, int num_elems)
+{
+
+  auto int *arrPtr = arr;
+  auto int *endPtr = arr + num_elems - 1;
+  auto int result;
+
+  while(arrPtr < endPtr)
+       {
+        if(*arrPtr != *endPtr)
+          {
+           result = 0;
+          }
+        else
+          {
+           result = 1;
+          }
+
+          ++arrPtr;
+          --endPtr;
+      }
+
+  return result;
+}

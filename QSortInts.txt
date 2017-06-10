@@ -1,0 +1,243 @@
+// ============================================================================
+// Write a program that lets the user allocate a dynamic array of ints and
+// populate it with unsorted values. Then use the qsort function to sort the
+// array in ascending, then descending order.
+// ============================================================================
+
+#include    <stdio.h>
+#include    <stdlib.h>
+#include    <string.h>
+#include    <time.h>
+
+// defined constants
+#define TRUE                    1
+#define FALSE                   0
+#define SORTED_ASC_FNAME        "ascending.txt"
+#define SORTED_DESC_FNAME       "descending.txt"
+#define UNSORTED_FNAME          "unsorted.txt"
+
+// function prototypes
+int*    AllocInts(int  numInts);
+int     SortDown(const void* vptr1, const void* vptr2);
+int     SortUp(const void* vptr1, const void* vptr2);
+int     WriteInts(const char  *fname, const int  array[], int  numElems);
+
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int     main(void)
+{
+    auto    int         *arrayPtr;
+    auto    int         numElems;
+    auto    int         index;
+            FILE        *outAsc;
+            FILE        *outDesc;
+
+    // ask the user how many ints they want
+    printf(" How many ints? ");
+    scanf(" %d", &numElems);
+
+    // allocate an array of ints and fill it with random values
+     arrayPtr = AllocInts(numElems);
+
+    // write the unsorted array to an output file
+     WriteInts("unsorted.txt", arrayPtr, numElems);
+
+    // sort the array in ascending order and write it to a file
+     qsort(arrayPtr, numElems, sizeof(int), SortUp);
+
+        //open output file
+        outAsc = fopen("ascending.txt", "w");
+
+        //set index for loop
+        index = 0;
+
+        //check for problem
+         if( NULL == outAsc )
+           {
+              puts(" Something went wrong, cannot write ints.");
+              return 0;
+           }
+        //loop to fill output file
+         else
+           {
+            for(; index < numElems; index++)
+               {
+                 fprintf(outAsc, "%d\n", arrayPtr[index]);
+               }
+
+          //close file
+            fclose(outAsc);
+
+           }
+    // sort the array in descending order and write it to a file
+     qsort(arrayPtr, numElems, sizeof(int), SortDown);
+
+        outDesc = fopen("descending.txt", "w");
+
+        index = 0;
+
+          if( NULL == outDesc )
+            {
+             puts(" Something went wrong, cannot write ints.");
+             return 0;
+            }
+          else
+            {
+             for(; index < numElems; index++)
+                {
+                 fprintf(outAsc, "%d\n", arrayPtr[index]);
+                }
+
+             //close file
+             fclose(outAsc);
+
+            }
+
+    // release the array
+    free(arrayPtr);
+
+    return 0;
+
+}  // end of "main"
+
+
+
+// ==== AllocInts =============================================================
+//
+// This function uses the formal parameter to allocate an array of ints from the
+// heap and fill it up with random integer values.
+//
+// Input:
+//      numInts [IN]        -- the number of elements to allocate for the array
+//
+// Output:
+//      The base address of the populated array, or NULL if an error occurs.
+//
+// ============================================================================
+
+int*    AllocInts(int  numInts)
+{
+
+    int *myArr;
+    int i;
+
+    myArr = malloc(sizeof(int)*numInts);
+
+    srand(0);
+
+    for (i = 0; i < numInts; i++)
+    {
+        myArr[i] = rand();
+    }
+
+    return myArr;
+
+}  // end of "AllocInts"
+
+
+
+// ==== SortDown ==============================================================
+//
+// This is the comparison function for qsort so that the array can be sorted
+// in descending order.
+//
+// Input:
+//      vptr1 [IN]          -- a void pointer containing the address of a single
+//                             array element
+//
+//      vptr2 [IN]          -- a void pointer containing the address of a single
+//                             array element
+//
+// Output:
+//      A negative value if the first parameter is greater than the second
+//      parameter, or a positive value if the first parameter is less than
+//      the second parameter, or a value of zero if the parameters are equal.
+//
+// ============================================================================
+
+int     SortDown(const void* vptr1, const void* vptr2)
+{
+
+  return (*(int*)vptr2 - *(int*)vptr1);
+
+
+}  // end of "SortUp"
+
+
+
+// ==== SortUp ================================================================
+//
+// This is the comparison function for qsort so that the array can be sorted
+// in ascending order.
+//
+// Input:
+//      vptr1 [IN]          -- a void pointer containing the address of a single
+//                             array element
+//
+//      vptr2 [IN]          -- a void pointer containing the address of a single
+//                             array element
+//
+// Output:
+//      A negative value if the first parameter is less than the second
+//      parameter, or a positive value if the first parameter is greater than
+//      the second parameter, or a value of zero if the parameters are equal.
+//
+// ============================================================================
+
+int     SortUp(const void* vptr1, const void* vptr2)
+{
+
+ return (*(int*)vptr1 - *(int*)vptr2);
+
+}  // end of "SortUp"
+
+
+
+// ==== WriteInts =============================================================
+//
+// This function writes the contents of the caller's array to an output file.
+//
+// Input:
+//      fname [IN]          -- the name of the output file to open
+//
+//      array [IN]          -- the base address of the integer array to write
+//                              to the output file
+//
+//      numElems [IN]       -- the number of elements in the array
+//
+// Output:
+//      A value of TRUE if everything goes okay, FALSE otherwise.
+//
+// ============================================================================
+
+int     WriteInts(const char  *fname, const int  array[], int  numElems)
+{
+ FILE *out;
+ int i = 0;
+
+  out = fopen (fname, "w");
+
+  if( NULL == out )
+    {
+     puts(" Something went wrong, cannot write ints.");
+     return 0;
+    }
+  else
+    {
+     for(; i < numElems; i++)
+        {
+         fprintf(out, "%d\n", array[i]);
+        }
+
+        fclose(out);
+
+        return 1;
+
+    }
+
+
+
+}  // end of "WriteInts"

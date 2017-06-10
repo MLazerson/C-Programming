@@ -1,0 +1,17 @@
+a.out   :       main.o dispoct.o disphex.o
+                        gcc main.o dispoct.o disphex.o
+
+main.o  :       main.c dispoct.h disphex.h
+                        gcc -c main.c
+
+dispoct.o       :       dispoct.c dispoct.h
+                                gcc -c dispoct.c
+
+disphex.o       :       disphex.c disphex.h
+                                gcc -c disphex.c
+
+clean   :
+                rm -f *.o a.out
+
+save    :
+                tar cvzf myProgram.tar.gz main.c dispoct.c dispoct.h disphex.c disphex.h makefile

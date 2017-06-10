@@ -1,0 +1,90 @@
+// ============================================================================
+// file: revstrings.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 03/28/2017
+// Class: CSCI 223
+// Time: TR 4:30pm
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program is write a program that allows the user to enter a max
+//      of 100 strings of text at the keyboard. If an empty line appears on
+//      the standard input stream, the program is to interpret that as the end
+//      of input. After the user has completed entering strings of text, the
+//      program should display all the strings the user entered in reverse.
+//      The char array is allocated off the heat using "malloc".
+//
+// ============================================================================
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+//function protoype(s), if any...
+
+//======= main ================================================================
+//
+//=============================================================================
+int main(void)
+{
+   auto char strBuf[250];//first/original string holder
+   auto char *ptr;//pointer for dynamic allocation
+   auto char temp;//for reversing ENTIRE string, not just WORDS
+   auto int len;//length of string
+   auto int index;//index
+   auto int secIndex;//second index
+   auto char sentinal = ' ';//for spaces
+   auto int counter = 0;//format and spacing counter
+   //get string
+    printf(" Enter a string: ");
+    fgets(strBuf, 250, stdin);
+
+   //allocate space
+    ptr = malloc(strlen(strBuf)+1);
+
+   //copy contents to newly allocated ptr
+    strcpy(ptr, strBuf);
+
+   //get length for looping
+    len = strlen(ptr);
+
+
+   //copy string to temp buffer for reading
+    for(index = 0, secIndex = len-1; index < (len/2); index++, secIndex--)
+       {
+         temp = ptr[secIndex];
+         ptr[secIndex] = ptr[index];
+         ptr[index] = temp;
+       }
+
+
+   //read words in reverse order
+    for(index = 0; ptr[index] != '\0'; index++)
+         {
+
+          if(ptr[index+1] == sentinal || ptr[index+1] == 0)
+            {
+             for(secIndex = index; secIndex >= 0 && ptr[secIndex] != ' '; secIndex--)
+                {
+                  printf("%c",ptr[secIndex]);
+                }
+
+               //count for spacing words and making new lines
+                 ++counter;
+
+                 if(counter>1)
+                   {
+                    printf("\n");
+                   }
+            }
+
+         }
+
+  //free space back to heap
+   free(ptr);
+
+   printf("\n");
+
+   return 0;
+}
+        

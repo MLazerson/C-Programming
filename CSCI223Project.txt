@@ -1,0 +1,268 @@
+// ============================================================================
+// File: main.c (Spring 2017)
+// ============================================================================
+
+#include    <pthread.h>
+#include    <stdio.h>
+#include    <stdlib.h>
+#include    "count_array.h"
+
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int     main(void)
+{
+ //declare and set vars...
+    auto    int                 numSegs;
+    auto    int                 numSegElems;
+    auto    int                 maxRand;
+    auto    int                 target;
+    auto    int                 totalElems;
+    auto    int                 totalFound = 0;
+    auto    ThreadInfo          *infoPtr;
+    auto    pthread_t           *threadHandles;
+    auto    int                 index = 0;
+    auto    int                 first;
+    auto    int                 last;
+    auto    int                 threadNum = 0;
+    auto    int                 startIndex = 0;
+    auto    int                 remainder = 0;
+    auto    int                 resetI = 0;
+    auto    int                 checkpt;
+
+    //get primary info from user...
+    printf("Please enter the total number of elements? ");
+    scanf("%d", &totalElems);
+
+    printf("Please enter the maximum random value: ");
+    scanf("%d", &maxRand);
+
+    printf("Please enter the number of segments (1 to 15857): ");
+    scanf("%d", &numSegs);
+
+    //check for numSegs error
+     if(numSegs > 15857)
+       {
+        puts("Too many segments for machine!");
+        exit(EXIT_FAILURE);
+       }
+
+    //get num segment elems
+     numSegElems = totalElems/numSegs;
+
+    // configure the array to work with
+    // declare array here...
+
+     auto int myArray[totalElems];
+
+    //and fill array here
+     for(; index < totalElems; index++)
+        {
+         // modulus(%) rand() and maxRand to get good range and
+         //not go beyond users max number
+         myArray[index] = (rand() % maxRand);
+
+        //test printf...ignore if still here
+        // printf(" %d ", myArray[index]);
+        }
+
+    // get the target value to look for
+     printf("Please enter the target value: ");
+     scanf("%d",&target);
+
+    // display initial information
+    printf("*** Begin search: target = %d, # elements = %d, # segments = %d, "
+                                                "# segment elements = %d\n"
+                                                                , target
+                                                                , totalElems
+                                                                , numSegs
+                                                                , numSegElems);
+
+    // initialize the array first/last indexes into the integer array
+
+      //handle case 1: one segment
+      if(numSegs == 1)
+        {
+          first = 0;
+          last = totalElems-1;
+        }
+      //handle case 2: if user enters too many segments for totalElems
+      //ex: 13 elems, 15 segments, default to one segment for each element
+      else if(numSegs >= totalElems)
+        {
+         first = 0;
+         last = 0;
+         numSegs = totalElems;
+        }
+      //handle all other cases
+      else
+        {
+         //set start index
+          for(; startIndex < numSegElems; startIndex++)
+             {
+              //loop just to get numbers
+              //printf(" %d \n", startIndex);
+             }
+
+          //set indexes
+          first = 0;
+          last = startIndex-1;
+        }
+
+    // loop and create threads (# of segments)
+    //start index for large loop...
+    index = 0;
+
+        // allocate a thread info structure from the heap
+        threadHandles = calloc(numSegs, sizeof(pthread_t));
+        infoPtr = calloc(numSegs, sizeof(ThreadInfo));
+
+    for(; threadNum < numSegs; index++)
+       {
+       // printf ("index %d target %d first %d last %d \n",index, target, first,last);
+        // store the information in the allocated structure
+
+          infoPtr[index].threadNum = threadNum;
+
+          infoPtr[index].target = target;
+          infoPtr[index].first = first;
+          infoPtr[index].last = last;
+          infoPtr[index].array = myArray;
+
+        //int retval = 0;, use for pthread return
+        // create the secondary thread, passing the thread info
+           pthread_create(&threadHandles[index], NULL, ThreadFunc, &infoPtr[index]);
+       // printf ("pthread create index %d ret %d \n", index, retval);
+
+        // update the first/last array indexes for the next thread
+
+        //for even split...
+        if(numSegs == 2)
+          {
+            first = last + 1;
+            last =  totalElems - 1;
+          }
+        //for one segment only...
+        else if(numSegs == totalElems - 1)
+          {
+           ++first;
+           ++last;
+          }
+        //for all else...
+        else
+          {
+           //loop to reset/update indexes...
+            for(; resetI < 1; resetI++)
+               {
+                 first = last + 1;
+                 last = (first+numSegElems)-1;
+
+              //   printf("in loop: fs %d ls %d \n", first, last);
+               }
+
+                //set checkpoint for last thread in case of the need
+                //to store remainder indexes
+                //Ex: 13/3 isn't even, so 1 extra is put into last thread
+                 checkpt = numSegs - 2;
+
+                // printf(" %d \n", c);
+
+                //if checkpoint reached...
+                 if(index == checkpt)
+                 {
+                  //find remainder for index
+                   remainder = (totalElems-1)-last;
+
+                   //check if remainder can be used
+                   if(remainder > 0)
+                     {
+                      //if it can, set last index
+                      last = last + remainder;
+                     }
+                 }
+          }//end if else statement
+
+          //increment threadNum
+          ++threadNum;
+
+          //reset reset/update index to zero for other threads
+          resetI = 0;
+
+       }//end large loop
+
+    // loop and join the threads to fetch each thread's results
+      for(index = 0; index < numSegs; index++)
+         {
+          // join with the next thread
+          pthread_join(threadHandles[index], NULL);
+
+          // get the total number of matches from the thread's infoPtr
+
+          totalFound = totalFound + infoPtr[index].numFound;
+
+          // and display a message
+          printf("*** pthread_join returned: threadNum = %d, numFound = %d \n",
+                           infoPtr[index].threadNum, infoPtr[index].numFound);
+
+
+         }
+            // release the infoPtr structure back to the heap
+              free(infoPtr);
+
+    // display the final results!
+
+     printf("*** Total matches found = %d \n", totalFound);
+
+
+    // release heap memory
+    free(threadHandles);
+
+    return 0;
+
+}  // end of "main"
+
+
+void*   ThreadFunc(void  *vptr)
+{
+  //declare and set vars
+  ThreadInfo *ptr = vptr;
+  ptr->numFound = 0;
+  auto int index = ptr->first;
+
+//  printf ("--- thrfunc: first %d last %d index %d targ %d \n", ptr->first,ptr->last,index, ptr->target);
+
+  //start search
+   for(; index <= ptr->last; ++index)
+   {
+    //if target found
+     if(ptr->target ==  ptr->array[index])
+       {
+        printf("*** ThreadFunc: TARGET FOUND! thread #%d", ptr->threadNum);
+        printf(" found %d", ptr->target);
+        printf(" at index %d...\n", index);
+
+        //increment numFound
+            ++ptr->numFound;
+       }
+   }
+
+
+   //drop out and display message
+    printf("*** ThreadFunc about to return: thread #%d:", ptr->threadNum);
+    printf(" first = %d, last = %d,", ptr->first, ptr->last);
+    printf(" array = %p, target = %d", ptr->array, ptr->target);
+    printf(" numFound = %d ", ptr->numFound);
+
+   //newline for formatting...
+    printf("\n");
+
+  //return 0 because of compiler warning
+  return 0;
+
+}//end of "ThreadFunc
+
+
+
+

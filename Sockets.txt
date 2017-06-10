@@ -1,0 +1,67 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#define LEN 256
+#define SOCKET_NAME "server_socket"
+
+int main(void)
+{
+  auto char message[LEN];
+  auto int sock;
+  struct sockaddr_un server_socket;
+
+  //create af_unix/socket stream w/call to socket func
+    sock = socket(AF_UNIX , SOCK_STREAM , 0);
+    if(sock == -1)
+      {
+       perror("Could not create socket");
+      }
+
+    puts("Socket created");
+
+    //name socket file
+    server_socket.sun_family = AF_UNIX;
+    strcpy(server_socket.sun_path, SOCKET_NAME);
+
+    //connect
+    if(connect(sock ,(struct sockaddr *)&server_socket, sizeof(server_socket))<0                                                                                        )
+      {
+       perror("Connect failed.");
+       return 1;
+      }
+
+   puts("Connected\n");
+
+   while(1)
+        {
+                                                                                                                                                                        
+         //get message
+         printf("Enter message : ");
+         fgets(message, LEN, stdin);
+
+      //Send
+        if( send(sock , message , strlen(message) , 0) < 0)
+          {
+            puts("Send failed");
+            return 1;
+          }
+
+        if( 0 == strcmp(message, "quit\n"))
+            {
+             break;
+            }
+        }
+
+//close socket
+   close(sock);
+   return 0;
+}
+
+
+                                                                                                                                                                                                                

@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+
+int count;
+
+void* ThreadFunc(void *sPtr);
+
+int main(int argc, char **argv)
+{
+ auto unsigned long val;
+ auto unsigned long val2;
+ auto int countPrim = 0;
+ auto pthread_t thread1;
+
+  if(argc < 3)
+    {
+    puts(" usage: ./a.out <#primary microseconds> <#secondary microseconds>");
+    }
+  else
+    {
+      sscanf(argv[1],"%lu", &val);
+      sscanf(argv[2],"%lu", &val2);
+
+      pthread_create( &thread1, NULL, ThreadFunc, (void*) val2);
+
+      while(1)
+      {
+       printf("Primary thread at %lu microseconds, counter = %d...\n", val, countPrim);
+
+       usleep(val);
+       ++countPrim;
+      }
+
+    }
+
+return 0;
+}
+
+void* ThreadFunc( void *sPtr )
+{
+
+ while(1)
+ {
+   printf("Secondary thread at %lu microseconds, counter = %d...\n", sPtr, count);
+   usleep(sPtr);
+   ++count;
+ }
+
+}

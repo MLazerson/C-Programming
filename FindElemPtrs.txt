@@ -1,0 +1,97 @@
+// ============================================================================
+// file: findelem.c
+// ============================================================================
+// Programmer: Scott Edwards
+// Date: 03/15/2017
+// Class: CSCI 223
+// Time: TR 4:30
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program goes through an array using pointers to find a target
+//      value. If the value is not found, it returns a NULL pointer.
+//
+// ============================================================================
+#include    <stdio.h>
+
+// function prototypes
+int   FindElem(int *arr, int num_elems, int targ);
+
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int     main(void)
+{
+ auto int size;
+ auto int target;
+ auto int result;
+
+  printf(" Enter a number between one and ten: ");
+  scanf("%d", &size);
+
+  auto int array[size];
+  auto int index;
+
+  for(index = 0; index < size ;index++)
+     {
+      printf(" Enter the integers: ");
+      scanf("%d", &array[index]);
+     }
+
+   printf(" Enter a integer value to find: ");
+   scanf("%d", &target);
+
+   printf(" My function will see if the array contains your value.\n");
+
+   result = FindElem(array, size, target);
+
+   if(result == 0)
+     {
+      printf(" The value is not in the array.\n");
+     }
+   else
+     {
+      printf(" Target was found at array[%d", result);
+      printf("].\n");
+     }
+
+ return 0;
+}
+
+// ==== FindElem ===============================================================
+//
+// This function
+//
+// Input:
+//      limit [IN]  -- Base address of an int array, the number of elements, and
+//                     a target value.
+//
+// Output:
+//      Returns a one if symmetrical OR a zero if not.
+//
+// ============================================================================
+int   FindElem(int *arr, int num_elems, int targ)
+{
+
+ auto int *arrPtr = arr;
+ auto int *endPtr = arr + num_elems - 1;
+ auto int result;
+
+   for(; arrPtr <= endPtr; ++arrPtr)
+      {
+
+       if(*arrPtr == targ)
+         {
+          return *arrPtr;
+         }
+       else
+         {
+          result = 0;
+         }
+
+      }
+return result;
+
+}

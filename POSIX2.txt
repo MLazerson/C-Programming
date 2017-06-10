@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+
+int tCount;
+
+//struct to hold 2 numbers and be able
+//to pass one argument to pthread_create
+typedef struct thread_args
+{
+    int thread_id;
+    unsigned long sleep;
+
+}ThreadData;
+
+//func prototype
+void* ThreadFunc(void *sPtr);
+
+int main(int argc, char **argv)
+{
+//variables
+  ThreadData myThread[argc];
+  auto int index = 1;
+  pthread_t secThrd;
+  auto int tCount = 0;
+
+    //usage error message
+    if(argc < 2)
+      {
+       puts(" usage: ./a.ot <#primary microseconds> <#secondary microseconds>...");
+      }
+    else
+      {
+
+      //loop reads argv's and creates threads
+      for(;index < argc; ++index)
+         {
+          sscanf(argv[index], "%lu", &myThread[index].sleep);
+
+          myThread[index].thread_id = tCount;
+
+          if(index > 1)
+           {
+
+            pthread_create(&secThrd, NULL, ThreadFunc, &myThread[index]);
+
+           }
+
+          ++tCount;
+         }
+
+      //primary thread/main
+       while(1)
+        {
+         printf("Primary thread at %lu microseconds...\n", myThread[1].sleep);
+         usleep(myThread[1].sleep);
+        }
+
+      }
+
+return 0;
+}
+
+void* ThreadFunc( void *sPtr )
+{
+//set variables
+ ThreadData *secP = sPtr;
+
+//infinite loop to print
+  while(1)
+  {
+
+     printf("Secondary thread #%d at %lu microseconds...\n",secP->thread_id,
+                                                               secP->sleep);
+     usleep(secP->sleep );
+
+  }
+
+}

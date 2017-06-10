@@ -1,0 +1,88 @@
+// ============================================================================
+// file: bindisplay.c
+// ============================================================================
+// Programmer: Malka Lazerson
+// Date: 02/23/2017
+// Class: CSCI 223
+// Time: TR 4:30p
+// Instructor: Mr. Edwards
+//
+// Description:
+//      This program allows the user to enter an integer value and see its
+//      binary equivalent displayed to stdout. It uses bitwise operators to
+//      do this (AND and Right shift).
+//
+// ============================================================================
+#include    <stdio.h>
+
+// ==== main ==================================================================
+//
+// ============================================================================
+
+int main(void)
+{
+ //variables...
+   int myNum;
+
+ //mask to check 1st spot
+   int mask1 = 0x80000000;
+
+ //mask to check the rest
+   int mask2 = 0x40000000;
+
+ //couter for splitting into four's
+   int counter = 0;
+
+     printf(" Enter an integer value: ");
+     scanf("%d", &myNum);
+
+    //checking very first place
+      if((myNum & mask1) == 0)
+        {
+         printf(" 0");
+         ++counter;
+        }
+      else
+        {
+         printf(" 1");
+         ++counter;
+        }
+
+    //for the rest
+      while(mask2 > 0)
+           {
+            if((myNum & mask2) == 0)
+              {
+               printf("0");
+              //increment counter for section breaks
+               ++counter;
+
+              //to break sections into four each
+               if(counter == 4)
+                 {
+                  printf(" ");
+                  counter = 0;
+                 }
+              }
+
+           //same as above, but for 1's
+            else
+              {
+               printf("1");
+               ++counter;
+
+               if(counter == 4)
+                 {
+                  printf(" ");
+                  counter = 0;
+                 }
+              }
+
+              mask2 = mask2 >> 1;
+           }
+
+            printf("\n");
+
+   return 0;
+
+}
